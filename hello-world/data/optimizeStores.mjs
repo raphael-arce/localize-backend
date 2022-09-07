@@ -5,9 +5,11 @@ const stores = require('./stores.json');
 const optimizedStores = require('./optimizedStores.json');
 
 for (const store of stores.stores) {
-    optimizedStores[store.storeNumber] = {
-        address: store.address,
-        location: store.location
+    if (store.address.city === 'Berlin') {
+        optimizedStores[store.storeNumber] = {
+            address: store.address,
+            location: store.location
+        }
     }
 }
 

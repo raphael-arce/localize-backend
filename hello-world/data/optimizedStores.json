@@ -89,19 +89,6 @@
       "lon": 13.32943
     }
   },
-  "1126": {
-    "address": {
-      "name": "dm-drogerie markt",
-      "street": "Postplatz 4-4c",
-      "streetAdditional": "im Einkaufszentrum \"Das Ziel\"",
-      "zip": "16761",
-      "city": "Hennigsdorf"
-    },
-    "location": {
-      "lat": 52.637132,
-      "lon": 13.204563
-    }
-  },
   "1150": {
     "address": {
       "name": "dm-drogerie markt",
@@ -296,19 +283,6 @@
       "lon": 13.4360649
     }
   },
-  "1489": {
-    "address": {
-      "name": "dm-drogerie markt",
-      "street": "Sankt-Annen-Straße 23",
-      "streetAdditional": "in der Sankt-Annen-Galerie",
-      "zip": "14776",
-      "city": "Brandenburg an der Havel"
-    },
-    "location": {
-      "lat": 52.4088905,
-      "lon": 12.5632707
-    }
-  },
   "1491": {
     "address": {
       "name": "dm-drogerie markt",
@@ -411,18 +385,6 @@
       "lon": 13.5790353
     }
   },
-  "1710": {
-    "address": {
-      "name": "dm-drogerie markt",
-      "street": "Wilmsstraße 7",
-      "zip": "14624",
-      "city": "Dallgow-Döberitz"
-    },
-    "location": {
-      "lat": 52.5355864,
-      "lon": 13.0603154
-    }
-  },
   "1737": {
     "address": {
       "name": "dm-drogerie markt",
@@ -449,18 +411,6 @@
       "lon": 13.4118534
     }
   },
-  "1778": {
-    "address": {
-      "name": "dm-drogerie markt",
-      "street": "Hönower Weg 1c",
-      "zip": "15366",
-      "city": "Hoppegarten"
-    },
-    "location": {
-      "lat": 52.5164107,
-      "lon": 13.6492341
-    }
-  },
   "1845": {
     "address": {
       "name": "dm-drogerie markt",
@@ -484,18 +434,6 @@
     "location": {
       "lat": 52.5248033,
       "lon": 13.5572026
-    }
-  },
-  "1872": {
-    "address": {
-      "name": "dm-drogerie markt",
-      "street": "Friedrichstraße 13",
-      "zip": "15537",
-      "city": "Erkner"
-    },
-    "location": {
-      "lat": 52.4227554,
-      "lon": 13.7525162
     }
   },
   "1878": {
@@ -602,19 +540,6 @@
       "lon": 13.3414958
     }
   },
-  "1940": {
-    "address": {
-      "name": "dm-drogerie markt",
-      "street": "Am Annatal 59",
-      "streetAdditional": "Hegermühle",
-      "zip": "15344",
-      "city": "Strausberg"
-    },
-    "location": {
-      "lat": 52.5490844,
-      "lon": 13.8629977
-    }
-  },
   "1944": {
     "address": {
       "name": "dm-drogerie markt",
@@ -627,18 +552,6 @@
     "location": {
       "lat": 52.4627657,
       "lon": 13.325958
-    }
-  },
-  "1950": {
-    "address": {
-      "name": "dm-drogerie markt",
-      "street": "Neue Kärntner Straße 1",
-      "zip": "16341",
-      "city": "Panketal"
-    },
-    "location": {
-      "lat": 52.6295891,
-      "lon": 13.5286807
     }
   },
   "1954": {
@@ -705,18 +618,6 @@
       "lon": 13.3298207
     }
   },
-  "2003": {
-    "address": {
-      "name": "dm-drogerie markt",
-      "street": "Potsdamer Chaussee 30",
-      "zip": "14476",
-      "city": "Potsdam"
-    },
-    "location": {
-      "lat": 52.4708485,
-      "lon": 13.102819
-    }
-  },
   "2051": {
     "address": {
       "name": "dm-drogerie markt",
@@ -781,19 +682,6 @@
       "lon": 13.3849569
     }
   },
-  "2120": {
-    "address": {
-      "name": "dm-drogerie markt",
-      "street": "Brandenburger Straße 49-51",
-      "streetAdditional": "im Karstadt",
-      "zip": "14467",
-      "city": "Potsdam"
-    },
-    "location": {
-      "lat": 52.400629,
-      "lon": 13.0554278
-    }
-  },
   "2141": {
     "address": {
       "name": "dm-drogerie markt",
@@ -807,18 +695,6 @@
       "lon": 13.3734736
     }
   },
-  "2144": {
-    "address": {
-      "name": "dm-drogerie markt",
-      "street": "Zum Großen Zernsee 3",
-      "zip": "14542",
-      "city": "Werder (Havel)"
-    },
-    "location": {
-      "lat": 52.3975642,
-      "lon": 12.9187097
-    }
-  },
   "2151": {
     "address": {
       "name": "dm-drogerie markt",
@@ -829,32 +705,6 @@
     "location": {
       "lat": 52.5308054,
       "lon": 13.3845796
-    }
-  },
-  "2168": {
-    "address": {
-      "name": "dm-drogerie markt",
-      "street": "Brückenstraße 6",
-      "streetAdditional": "Petershagener Straße",
-      "zip": "15370",
-      "city": "Fredersdorf-Vogelsdorf"
-    },
-    "location": {
-      "lat": 52.5242831,
-      "lon": 13.7631237
-    }
-  },
-  "2179": {
-    "address": {
-      "name": "dm-drogerie markt",
-      "street": "Babelsberger Str. 16",
-      "streetAdditional": "im Hauptbahnhof",
-      "zip": "14473",
-      "city": "Potsdam"
-    },
-    "location": {
-      "lat": 52.3926631,
-      "lon": 13.0659787
     }
   },
   "2186": {
@@ -921,19 +771,6 @@
       "lon": 13.4142339
     }
   },
-  "2195": {
-    "address": {
-      "name": "dm-drogerie markt",
-      "street": "Nedlitzer Straße 19b",
-      "streetAdditional": "Ecke Erich-Arendt-Straße",
-      "zip": "14469",
-      "city": "Potsdam"
-    },
-    "location": {
-      "lat": 52.4232661,
-      "lon": 13.0537341
-    }
-  },
   "2205": {
     "address": {
       "name": "dm-drogerie markt",
@@ -998,18 +835,6 @@
     "location": {
       "lat": 52.5699495,
       "lon": 13.4048063
-    }
-  },
-  "2288": {
-    "address": {
-      "name": "dm-drogerie markt",
-      "street": "Neuendorfer Straße 76",
-      "zip": "14770",
-      "city": "Brandenburg an der Havel"
-    },
-    "location": {
-      "lat": 52.4080421,
-      "lon": 12.5467012
     }
   },
   "2329": {
@@ -1111,18 +936,6 @@
       "lon": 13.4670324
     }
   },
-  "2501": {
-    "address": {
-      "name": "dm-drogerie markt",
-      "street": "Saganer Straße 10",
-      "zip": "14513",
-      "city": "Teltow"
-    },
-    "location": {
-      "lat": 52.3952272,
-      "lon": 13.2377994
-    }
-  },
   "2565": {
     "address": {
       "name": "dm-drogerie markt",
@@ -1177,31 +990,6 @@
       "lon": 13.2742905
     }
   },
-  "2679": {
-    "address": {
-      "name": "dm-drogerie markt",
-      "street": "Schönfließer Straße 25f",
-      "zip": "16540",
-      "city": "Hohen Neuendorf"
-    },
-    "location": {
-      "lat": 52.666639,
-      "lon": 13.2963729
-    }
-  },
-  "2681": {
-    "address": {
-      "name": "dm-drogerie markt",
-      "street": "Dammstr. 9",
-      "streetAdditional": "im \"Nauener Karree\"",
-      "zip": "14641",
-      "city": "Nauen"
-    },
-    "location": {
-      "lat": 52.609832,
-      "lon": 12.8804165
-    }
-  },
   "2728": {
     "address": {
       "name": "dm-drogerie markt",
@@ -1214,48 +1002,6 @@
     "location": {
       "lat": 52.5289815,
       "lon": 13.4567882
-    }
-  },
-  "2739": {
-    "address": {
-      "name": "dm-drogerie markt",
-      "street": "Landsberger Chaussee 17",
-      "streetAdditional": "im \"Kaufpark Eiche\"",
-      "district": "Eiche",
-      "zip": "16356",
-      "city": "Ahrensfelde"
-    },
-    "location": {
-      "lat": 52.5501184,
-      "lon": 13.6010219
-    }
-  },
-  "2740": {
-    "address": {
-      "name": "dm-drogerie markt",
-      "street": "Marlene-Dietrich-Allee 15b",
-      "streetAdditional": "Campus am Filmpark Babelsberg",
-      "district": "Babelsberg",
-      "zip": "14482",
-      "city": "Potsdam"
-    },
-    "location": {
-      "lat": 52.3903791,
-      "lon": 13.1172396
-    }
-  },
-  "2768": {
-    "address": {
-      "name": "dm-drogerie markt",
-      "street": "Stern-Center 1-10",
-      "streetAdditional": "Stern-Center",
-      "district": "Drewitz",
-      "zip": "14480",
-      "city": "Potsdam"
-    },
-    "location": {
-      "lat": 52.3718839,
-      "lon": 13.1346168
     }
   },
   "2781": {
@@ -1354,31 +1100,6 @@
       "lon": 13.4136213
     }
   },
-  "2833": {
-    "address": {
-      "name": "dm-drogerie markt",
-      "street": "Apfelweg 5",
-      "streetAdditional": "bei Aldi",
-      "zip": "14542",
-      "city": "Werder (Havel)"
-    },
-    "location": {
-      "lat": 52.3635069,
-      "lon": 12.938519
-    }
-  },
-  "2851": {
-    "address": {
-      "name": "dm-drogerie markt",
-      "street": "Wannseestraße 44",
-      "zip": "14532",
-      "city": "Stahnsdorf"
-    },
-    "location": {
-      "lat": 52.3937863,
-      "lon": 13.2109011
-    }
-  },
   "2860": {
     "address": {
       "name": "dm-drogerie markt",
@@ -1391,19 +1112,6 @@
     "location": {
       "lat": 52.4259155,
       "lon": 13.392458
-    }
-  },
-  "2871": {
-    "address": {
-      "name": "dm-drogerie markt",
-      "street": "Potsdamer Straße 177",
-      "district": "Bornstedt",
-      "zip": "14469",
-      "city": "Potsdam"
-    },
-    "location": {
-      "lat": 52.4156589,
-      "lon": 13.0234901
     }
   },
   "2877": {

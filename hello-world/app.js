@@ -24,7 +24,7 @@ exports.lambdaHandler = async (event, context) => {
             q = event.queryStringParameters['q'] ?? '';
         }
 
-        const products = await productSearch(q);
+        const result = JSON.stringify(await productSearch(q));
 
         response = {
             statusCode: 200,
@@ -33,9 +33,7 @@ exports.lambdaHandler = async (event, context) => {
                 "Access-Control-Allow-Origin": "*",
                 "Access-Control-Allow-Methods": "OPTIONS,GET"
             },
-            body: {
-                products
-            }
+            body: result
         };
     } catch (err) {
         console.log(err);
