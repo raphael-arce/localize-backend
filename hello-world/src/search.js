@@ -55,7 +55,7 @@ async function productSearch(query) {
     const isValidQuery = (query !== null && query !== undefined && typeof query === 'string' && query !== '');
     if (isValidQuery) {
         const searchResult = await axios(
-            `https://product-search.services.dmtech.com/de/search?query=${query}&searchType=product&type=search`
+            `https://product-search.services.dmtech.com/de/search?query=${encodeURI(query)}&searchType=product&type=search`
         );
 
         return productAvailability(searchResult.data.products, STORE_IDS);
