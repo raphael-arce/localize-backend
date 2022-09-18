@@ -13,7 +13,10 @@ async function productAvailability(products, storeIds) {
             `https://products.dm.de/store-availability/DE/products/dans/${dan}/availability-with-listing?storeNumbers=${storeIds}&view=basic`,
         );
 
-        const availableAt = availabilityResult.data.storeAvailability.map(({ store, inStock, stockLevel }) => {
+        const availableAt = availabilityResult.data.storeAvailability.reduce((result, { store, inStock, stockLevel }) => {
+            if (!inStock) {
+                return result;
+            }
 
             const { storeNumber } = store
 
@@ -21,12 +24,14 @@ async function productAvailability(products, storeIds) {
                 storesWhereAvailable.push(storeNumber);
             }
 
-            return {
+            result.push({
                 storeId: storeNumber,
                 inStock,
                 stockLevel,
-            }
-        });
+            });
+
+            return result;
+        }, []);
 
         const { formattedValue } = price;
 
