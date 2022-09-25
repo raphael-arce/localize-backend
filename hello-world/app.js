@@ -1,6 +1,4 @@
-// const axios = require('axios')
-// const url = 'http://checkip.amazonaws.com/';
-const { productSearch } = require("./src/search.js");
+const searchEngine = require("./src/search/searchEngine");
 
 /**
  *
@@ -24,7 +22,7 @@ exports.lambdaHandler = async (event, context) => {
             q = event.queryStringParameters['q'] ?? '';
         }
 
-        const result = JSON.stringify(await productSearch(q));
+        const result = JSON.stringify(await searchEngine.search(q));
 
         response = {
             statusCode: 200,
