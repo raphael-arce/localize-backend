@@ -140,14 +140,14 @@ describe('stores/ROSSMANN/search', () => {
 
             const expectedProducts = []
 
-            const actualProducts = await testUnit.mapProducts({ products: givenProducts, storeAddressesMap: givenStoreAddressesMap, storeIds: givenStoreIds })
+            const actualProducts = await testUnit.mapProducts({ products: givenProducts, storeAddressesMap: givenStoreAddressesMap, postcodes: givenStoreIds })
 
             expect(actualProducts).toStrictEqual(expectedProducts);
             expect(testUnit.getProductAvailability).toHaveBeenCalledTimes(1);
             expect(testUnit.getProductAvailability).toHaveBeenCalledWith({
                 dan: 123,
                 storeAddressesMap: givenStoreAddressesMap,
-                storeIds: givenStoreIds,
+                postcodes: givenStoreIds,
                 price: givenProducts[0].price
             });
         })
