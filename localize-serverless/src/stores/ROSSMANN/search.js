@@ -14,12 +14,14 @@ module.exports = {
 
         return availabilityResult.data.store.reduce((accumulator, { id, productInfo , city }) => {
             const { available } = productInfo[0];
+            const uniqueStoreId = `ROSSMANN_${id}`
 
-            if (!available || city !== 'Berlin') {
+            if (!available
+                || city !== 'Berlin'
+                || accumulator.some(availability => availability.storeId ===  uniqueStoreId)) {
                 return accumulator;
             }
 
-            const uniqueStoreId = `ROSSMANN_${id}`
             if (!storeAddressesMap.has(uniqueStoreId)) {
                 storeAddressesMap.set(uniqueStoreId, STORES[id]);
             }
@@ -69,6 +71,10 @@ module.exports = {
                 price
             })
 
+            if (_.isEmpty(availableAt)) {
+                return undefined;
+            }
+
             const smallerImageUrl = `${normalimageurl}?width=310&height=140&fit=bounds`;
 
             return {
@@ -80,7 +86,8 @@ module.exports = {
             };
         })
 
-        return Promise.all(promises);
+        const mappedProducts = await Promise.all(promises);
+        return _.compact(mappedProducts);
     },
 
     async productSearch(query, storeAddressesMap) {

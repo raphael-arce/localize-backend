@@ -3,6 +3,7 @@
 require('dotenv').config();
 const axios = require('axios');
 const STORES = require('./data/storesBerlin.json');
+const _ = require('lodash');
 
 const STORE_IDS = Object.keys(STORES);
 
@@ -19,6 +20,10 @@ module.exports = {
 
             const availableAt = await this.getProductAvailability({ dan, storeAddressesMap, storeIds, price});
 
+            if(_.isEmpty(availableAt)) {
+                return undefined;
+            }
+
             const imageUrl = imageUrlTemplates[0].replace('{transformations}', 'f_auto,q_auto,c_fit,h_270,w_260');
 
             return {
@@ -30,7 +35,8 @@ module.exports = {
             };
         });
 
-        return Promise.all(promises);
+        const mappedProducts = await Promise.all(promises);
+        return _.compact(mappedProducts);
     },
 
     /**
