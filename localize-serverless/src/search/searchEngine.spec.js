@@ -259,7 +259,6 @@ describe('search/searchEngine', () => {
 
             expect(actualProductWithPriceComparison).toStrictEqual(expectedProduct);
         })
-
     })
 
     describe('returnValueOfMapEntry()', () => {

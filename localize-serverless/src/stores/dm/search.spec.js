@@ -1,131 +1,15 @@
 'use strict';
 
 jest.mock('axios');
+jest.mock('./data/storesBerlin.json', () => ({
+    '1': 'address1',
+    '2': 'address2',
+    '3': 'address3',
+}), { virtual: true });
 const axios = require('axios');
 const testUnit = require('./search');
 
-describe('stores/ROSSMANN/search', () => {
-    describe('reduceAvailabilityResult()', () => {
-        it('should return an empty string when availabilityResult has no data', () => {
-            const givenAvailabilityResult = {};
-            const givenStoreAddressesMap = new Map();
-            const givenPrice = 'price';
-
-            const expectedReduced = []
-
-            const actualReduced = testUnit.reduceAvailabilityResult({
-                availabilityResult: givenAvailabilityResult,
-                storeAddressesMap: givenStoreAddressesMap,
-                price: givenPrice
-            })
-
-            expect(actualReduced).toStrictEqual(expectedReduced);
-        })
-
-        it('should return an empty string when availabilityResult.data has no store', () => {
-            const givenAvailabilityResult = { data: {}};
-            const givenStoreAddressesMap = new Map();
-            const givenPrice = 'price';
-
-            const expectedReduced = []
-
-            const actualReduced = testUnit.reduceAvailabilityResult({
-                availabilityResult: givenAvailabilityResult,
-                storeAddressesMap: givenStoreAddressesMap,
-                price: givenPrice
-            })
-
-            expect(actualReduced).toStrictEqual(expectedReduced);
-        })
-
-        it('should reduce the available stores to where the product is in stock or those located in Berlin', async () => {
-            const givenAvailabilityResult = {
-                data: {
-                    store: [
-                        {
-                            id: 1,
-                            productInfo: [{ available : true}],
-                            city: 'Berlin',
-                            postcode: '12345',
-                            street: 'sesame str 4',
-                        },
-                        {
-                            id: 2,
-                            productInfo: [{ available : false}],
-                            city: 'Berlin',
-                            postcode: '16789',
-                            street: 'sesame str 7',
-                        },
-                        {
-                            id: 3,
-                            productInfo: [{ available : true}],
-                            city: 'Brandenburg',
-                            postcode: '32984',
-                            street: 'sesame str 90',
-                        },
-                    ],
-                }
-            }
-            const givenPrice = {
-                formattedValue: '123€',
-            };
-            const givenStoreAddressesMap = new Map();
-            const expectedReductedAvailabilityResult = {
-                storeId: 'ROSSMANN_1',
-                inStock: true,
-                formattedPrice: givenPrice.formattedValue,
-            }
-
-            const actualReducedAvailabilityResult = testUnit.reduceAvailabilityResult({
-                availabilityResult: givenAvailabilityResult,
-                storeAddressesMap: givenStoreAddressesMap,
-                price: givenPrice
-            });
-
-            expect(actualReducedAvailabilityResult).toStrictEqual([expectedReductedAvailabilityResult]);
-        });
-
-        it('should add the available stores\' address to the storeAddressesMap only when it has not been added yet', async () => {
-            const givenAvailabilityResult = {
-                data: {
-                    store: [
-                        {
-                            id: 1,
-                            productInfo: [{ available : true}],
-                            city: 'Berlin',
-                            postcode: '12345',
-                            street: 'sesame str 4',
-                        },
-                        {
-                            id: 1,
-                            productInfo: [{ available : true}],
-                            city: 'Berlin',
-                            postcode: '12345',
-                            street: 'sesame str 4',
-                        },
-                    ],
-                }
-            }
-            const givenStoreAddressesMap = new Map();
-            const expectedStoreAddressesMap = new Map().set('ROSSMANN_1', {
-                address: {
-                    name: 'ROSSMANN Drogeriemarkt',
-                    street: 'sesame str 4',
-                    zip: '12345',
-                    city: 'Berlin'
-                }
-            })
-
-            testUnit.reduceAvailabilityResult({
-                availabilityResult: givenAvailabilityResult,
-                storeAddressesMap: givenStoreAddressesMap,
-                price: 'somePrice',
-            });
-
-            expect(givenStoreAddressesMap).toStrictEqual(expectedStoreAddressesMap);
-        });
-    })
-
+describe('stores/DM/search', () => {
     describe('mapProducts()', () => {
         beforeEach(() => {
             jest.spyOn(testUnit, 'getProductAvailability').mockReturnValueOnce([]);
@@ -138,22 +22,22 @@ describe('stores/ROSSMANN/search', () => {
 
         it('should return a correctly formed product', async () => {
             const givenProducts = [{
-                code: 987,
+                gtin: 987,
                 dan: 123,
-                name: 'productTitle',
-                normalimageurl: ['some/url'],
+                title: 'productTitle',
+                imageUrlTemplates: ['some/url'],
                 price: {
                     formattedValue: '123€',
                     value: 123,
                 }
             }]
             const givenStoreAddressesMap = new Map();
-            const givenPostcodes = [1];
+            const givenStoreIds = [1];
 
             const expectedProducts = [{
-                gtin: 987,
+                gtin: '987',
                 title: 'productTitle',
-                imageUrl: 'some/url?width=310&height=140&fit=bounds',
+                imageUrl: 'some/url',
                 price: {
                     formattedValue: '123€',
                     value: 123,
@@ -161,36 +45,36 @@ describe('stores/ROSSMANN/search', () => {
                 availableAt: []
             }]
 
-            const actualProducts = await testUnit.mapProducts({ products: givenProducts, storeAddressesMap: givenStoreAddressesMap, postcodes: givenPostcodes })
+            const actualProducts = await testUnit.mapProducts({ products: givenProducts, storeAddressesMap: givenStoreAddressesMap, storeIds: givenStoreIds })
 
             expect(actualProducts).toStrictEqual(expectedProducts);
             expect(testUnit.getProductAvailability).toHaveBeenCalledTimes(1);
             expect(testUnit.getProductAvailability).toHaveBeenCalledWith({
                 dan: 123,
                 storeAddressesMap: givenStoreAddressesMap,
-                postcodes: givenPostcodes,
+                storeIds: givenStoreIds,
                 price: givenProducts[0].price
             });
         })
 
-        it('should append the image format query params to the normal image url', async () => {
+        it('should replace {transformations} in the imageUrlTemplate\'s first item', async () => {
             const givenProducts = [{
-                code: 987,
+                gtin: 987,
                 dan: 123,
-                name: 'productTitle',
-                normalimageurl: ['some/url'],
+                title: 'productTitle',
+                imageUrlTemplates: ['some/url/{transformations}'],
                 price: {
                     formattedValue: '123€',
                     value: 123,
                 }
             }]
             const givenStoreAddressesMap = new Map();
-            const givenPostcodes = [1];
+            const givenStoreIds = [1];
 
             const expectedProducts = [{
-                gtin: 987,
+                gtin: '987',
                 title: 'productTitle',
-                imageUrl: 'some/url?width=310&height=140&fit=bounds',
+                imageUrl: 'some/url/f_auto,q_auto,c_fit,h_270,w_260',
                 price: {
                     formattedValue: '123€',
                     value: 123,
@@ -201,11 +85,115 @@ describe('stores/ROSSMANN/search', () => {
             const actualProducts = await testUnit.mapProducts({
                 products: givenProducts,
                 storeAddressesMap: givenStoreAddressesMap,
-                postcodes: givenPostcodes
+                storeIds: givenStoreIds
             })
 
             expect(actualProducts).toStrictEqual(expectedProducts);
         });
+    });
+
+    describe('reduceAvailabilityResult()', () => {
+        it('should return an empty string if there availabilityResult.data is undefined', async () => {
+            const givenAvailabilityResult = {}
+            const givenStoreAddressesMap = new Map();
+            const givenPrice = 'somePrice';
+
+            const actualReducedAvailabilityResult = testUnit.reduceAvailabilityResult({
+                availabilityResult: givenAvailabilityResult,
+                storeAddressesMap: givenStoreAddressesMap,
+                price: givenPrice,
+            });
+
+            expect(actualReducedAvailabilityResult).toStrictEqual([]);
+        });
+
+        it('should return an empty string if there availabilityResult.data.storeAvailability is undefined', async () => {
+            const givenAvailabilityResult = {data: {}}
+            const givenStoreAddressesMap = new Map();
+            const givenPrice = 'somePrice';
+
+            const actualReducedAvailabilityResult = testUnit.reduceAvailabilityResult({
+                availabilityResult: givenAvailabilityResult,
+                storeAddressesMap: givenStoreAddressesMap,
+                price: givenPrice,
+            });
+
+            expect(actualReducedAvailabilityResult).toStrictEqual([]);
+        });
+
+        it('should reduce the available stores to where the product is in stock', async () => {
+            const givenAvailabilityResult = {
+                data: {
+                    storeAvailability: [
+                        {
+                            store: {
+                                storeNumber: 1
+                            },
+                            inStock: true,
+                            stockLevel: 12
+                        },
+                        {
+                            store: {
+                                storeNumber: 2
+                            },
+                            inStock: false,
+                            stockLevel: 0
+                        }
+                    ]
+                }
+            }
+            const givenPrice = {
+                formattedValue: '123€',
+            };
+            const givenStoreAddressesMap = new Map();
+            const expectedReductedAvailabilityResult = {
+                storeId: 'DM_1',
+                inStock: true,
+                stockLevel: 12,
+                formattedPrice: givenPrice.formattedValue,
+            }
+
+            const actualReducedAvailabilityResult = testUnit.reduceAvailabilityResult({
+                availabilityResult: givenAvailabilityResult,
+                storeAddressesMap: givenStoreAddressesMap,
+                price: givenPrice
+            });
+
+            expect(actualReducedAvailabilityResult).toStrictEqual([expectedReductedAvailabilityResult]);
+        })
+
+        it('should add the available stores\' address to the storeAddressesMap only when it has not been added yet', async () => {
+            const givenAvailabilityResult = {
+                data: {
+                    storeAvailability: [
+                        {
+                            store: {
+                                storeNumber: 1
+                            },
+                            inStock: true,
+                            stockLevel: 12
+                        },
+                        {
+                            store: {
+                                storeNumber: 1
+                            },
+                            inStock: true,
+                            stockLevel: 32
+                        }
+                    ]
+                }
+            }
+            const givenStoreAddressesMap = new Map();
+            const expectedStoreAddressesMap = new Map().set('DM_1', 'address1')
+
+            testUnit.reduceAvailabilityResult({
+                availabilityResult: givenAvailabilityResult,
+                storeAddressesMap: givenStoreAddressesMap,
+                price: 'somePrice',
+            });
+
+            expect(givenStoreAddressesMap).toStrictEqual(expectedStoreAddressesMap);
+        })
     });
 
     describe('getProductAvailability()', () => {
@@ -221,7 +209,7 @@ describe('stores/ROSSMANN/search', () => {
         it('should call axios with correctly form url and return (and call) reduceAvailabilityResult()', async () => {
             const givenDan = 123;
             const givenStoreAddressesMap = new Map();
-            const givenPostcodes = [1]
+            const givenStoreIds = [1]
             const expectedProductAvailability = ['someAvailability'];
             axios.mockResolvedValueOnce(expectedProductAvailability);
             testUnit.reduceAvailabilityResult.mockReturnValueOnce(expectedProductAvailability);
@@ -229,14 +217,14 @@ describe('stores/ROSSMANN/search', () => {
             const actualProductAvailability = await testUnit.getProductAvailability({
                 dan: givenDan,
                 storeAddressesMap: givenStoreAddressesMap,
-                postcodes: givenPostcodes,
+                storeIds: givenStoreIds,
                 price: 'somePrice',
             });
 
-            expect(actualProductAvailability).toStrictEqual(expectedProductAvailability);
+            expect(actualProductAvailability).toBe(expectedProductAvailability);
             expect(axios).toHaveBeenCalledTimes(1)
             expect(axios).toHaveBeenCalledWith(
-                `${process.env.ROSSMANN_STORE_AVAILABILITY_API}/storefinder/.rest/store?dan=${givenDan}&q=${givenPostcodes[0]}`
+                `${process.env.DM_STORE_AVAILABILITY_API}store-availability/DE/products/dans/${givenDan}/availability-with-listing?storeNumbers=${givenStoreIds}&view=basic`
             );
             expect(testUnit.reduceAvailabilityResult).toHaveBeenCalledTimes(1);
             expect(testUnit.reduceAvailabilityResult).toHaveBeenCalledWith({
@@ -256,7 +244,7 @@ describe('stores/ROSSMANN/search', () => {
             const actualProductAvailability = await testUnit.getProductAvailability({
                 dan: givenDan,
                 storeAddressesMap: givenStoreAddressesMap,
-                postcodes: [1]
+                storeIds: [1]
             });
 
             expect(actualProductAvailability).toStrictEqual([]);
@@ -270,6 +258,7 @@ describe('stores/ROSSMANN/search', () => {
     });
 
     describe('productSearch()', () => {
+
         const givenStoreAddressesMap = new Map();
 
         beforeEach(() => {
@@ -284,7 +273,7 @@ describe('stores/ROSSMANN/search', () => {
         it('should make an axios call with encoded query', async() => {
             const givenQuery = 'käse';
             axios.mockResolvedValueOnce({});
-            const expectedResult = `${process.env.ROSSMANN_PRODUCT_SEARCH_API}/de/search/suggest?q=${encodeURI(givenQuery)}`;
+            const expectedResult = `${process.env.DM_PRODUCT_SEARCH_API}/de/search?query=${encodeURI(givenQuery)}&searchType=product&type=search`;
 
             await testUnit.productSearch(givenQuery, givenStoreAddressesMap);
 
@@ -303,16 +292,7 @@ describe('stores/ROSSMANN/search', () => {
 
         it('should return an empty array if searchResult.data has no products', async () => {
             const givenQuery = 'query';
-            axios.mockResolvedValueOnce({ data: {}});
-
-            const actualResult = await testUnit.productSearch(givenQuery, givenStoreAddressesMap);
-
-            expect(actualResult).toStrictEqual([]);
-        });
-
-        it('should return an empty array if searchResult.data.products has no results', async () => {
-            const givenQuery = 'query';
-            axios.mockResolvedValueOnce({ data: { products: {}}});
+            axios.mockResolvedValueOnce({data: {}});
 
             const actualResult = await testUnit.productSearch(givenQuery, givenStoreAddressesMap);
 
@@ -321,7 +301,7 @@ describe('stores/ROSSMANN/search', () => {
 
         it('should call and return mapProducts() with the found products', async () => {
             const givenQuery = 'query';
-            axios.mockResolvedValueOnce({ data: { products: { results: {} }}});
+            axios.mockResolvedValueOnce({ data: { products: [] }});
             const expectedResult = ['product1'];
             testUnit.mapProducts.mockReturnValueOnce(expectedResult);
 
@@ -347,6 +327,5 @@ describe('stores/ROSSMANN/search', () => {
 
             global.console.error.mockRestore();
         });
-
-    })
+    });
 });

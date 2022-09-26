@@ -4,8 +4,7 @@ require('dotenv').config();
 const axios = require('axios');
 const _ = require('lodash');
 const RELEVANT_POSTCODES = require('./data/reducedPostcodesWithShops.json');
-
-
+const STORES = require('./data/storesBerlin.json');
 
 module.exports = {
     reduceAvailabilityResult({ availabilityResult, storeAddressesMap, price}) {
@@ -13,7 +12,7 @@ module.exports = {
             return [];
         }
 
-        return availabilityResult.data.store.reduce((accumulator, { id, productInfo , city, postcode, street }) => {
+        return availabilityResult.data.store.reduce((accumulator, { id, productInfo , city }) => {
             const { available } = productInfo[0];
 
             if (!available || city !== 'Berlin') {
@@ -22,14 +21,7 @@ module.exports = {
 
             const uniqueStoreId = `ROSSMANN_${id}`
             if (!storeAddressesMap.has(uniqueStoreId)) {
-                storeAddressesMap.set(uniqueStoreId, {
-                    address: {
-                        name: 'ROSSMANN Drogeriemarkt',
-                        street,
-                        zip: postcode,
-                        city
-                    }
-                });
+                storeAddressesMap.set(uniqueStoreId, STORES[id]);
             }
 
             accumulator.push({

@@ -107,9 +107,9 @@ You can find more information and examples about filtering Lambda function logs 
 Tests are defined in the `hello-world/tests` folder in this project. Use NPM to install the [Mocha test framework](https://mochajs.org/) and run unit tests.
 
 ```bash
-localize-serverless-aws$ cd hello-world
-hello-world$ npm install
-hello-world$ npm run test
+localize-serverless-aws$ cd localize-serverless
+localize-serverless$ npm install
+localize-serverless$ npm run test
 ```
 
 ## Cleanup

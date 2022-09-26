@@ -1,15 +1,13 @@
 const dm = require("../stores/dm/search");
 const rossmann = require("../stores/ROSSMANN/search");
 
-
-
 module.exports = {
     returnValueOfMapEntry([key, value]){
         return value
     },
 
     getProductWithPriceComparison({ gtin, title, imageUrl, price, availableAt }) {
-        const {formattedValue, value } = price;
+        const { formattedValue, value } = price;
 
         return {
             gtin,

@@ -2,17 +2,17 @@
 
 require('dotenv').config();
 const axios = require('axios');
-const STORES = require('./data/optimizedStores.json');
+const STORES = require('./data/storesBerlin.json');
 
 const STORE_IDS = Object.keys(STORES);
 
 module.exports = {
     /**
      *
-     * @param products
-     * @param storeAddressesMap
-     * @param storeIds
-     * @returns {Promise<Awaited<unknown>[]>}
+     * @param { Array<Object> } products
+     * @param { Map } storeAddressesMap
+     * @param { Array<string> }storeIds
+     * @returns { Promise<Awaited<Array<Product>>> }
      */
     async mapProducts({ products, storeAddressesMap, storeIds }) {
         const promises = products.map(async ({ dan, gtin, title, imageUrlTemplates, price }) => {
@@ -22,7 +22,7 @@ module.exports = {
             const imageUrl = imageUrlTemplates[0].replace('{transformations}', 'f_auto,q_auto,c_fit,h_270,w_260');
 
             return {
-                gtin,
+                gtin: gtin.toString(),
                 title,
                 imageUrl,
                 price,
@@ -35,10 +35,10 @@ module.exports = {
 
     /**
      * *
-     * @param availabilityResult
-     * @param storeAddressesMap
-     * @param formattedPrice
-     * @returns {*[]}
+     * @param { Object } availabilityResult
+     * @param { Map } storeAddressesMap
+     * @param { Object } price
+     * @returns { Array<availableAt> }
      */
     reduceAvailabilityResult({ availabilityResult, storeAddressesMap, price }) {
         if (!availabilityResult.data || !availabilityResult.data.storeAvailability) {
@@ -57,10 +57,10 @@ module.exports = {
             }
 
             accumulator.push({
-                inStock,
                 storeId: uniqueStoreId,
-                stockLevel,
+                inStock,
                 formattedPrice: price.formattedValue,
+                stockLevel,
             });
 
             return accumulator;
@@ -69,11 +69,11 @@ module.exports = {
 
     /**
      *
-     * @param dan
-     * @param storeAddressesMap
-     * @param storeIds
-     * @param price
-     * @returns {Promise<*[]>}
+     * @param { string } dan
+     * @param { Map } storeAddressesMap
+     * @param { Array<string> } storeIds
+     * @param { Object } price
+     * @returns { Promise<availableAt[]> }
      */
     async getProductAvailability({ dan, storeAddressesMap, storeIds, price }) {
         try {
@@ -90,9 +90,9 @@ module.exports = {
 
     /**
      *
-     * @param query
-     * @param storeAddressesMap
-     * @returns {Promise<*[]|Awaited<*>[]>}
+     * @param { string } query
+     * @param { Map } storeAddressesMap
+     * @returns { Promise<Array<Product>> }
      */
     async productSearch(query, storeAddressesMap) {
         try {
