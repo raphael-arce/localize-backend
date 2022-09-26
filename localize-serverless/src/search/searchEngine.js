@@ -61,6 +61,13 @@ module.exports = {
      */
     async search(query) {
 
+        if (query === '' || typeof query !== 'string') {
+            return {
+                products: [],
+                storeAddresses: {}
+            }
+        }
+
         const productSearches = [];
 
         const storeAddressesMap = new Map();

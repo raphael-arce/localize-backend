@@ -6,6 +6,25 @@ const rossmannSearch = require('../stores/ROSSMANN/search.js');
 
 describe('search/searchEngine', () => {
     describe('search()', () => {
+        it('should return early with empty products and storeAddresses if the query is empty', async () => {
+            const givenQuery = '';
+            jest.spyOn(global.Promise, 'all');
+            jest.spyOn(testUnit, 'mergeResults')
+
+            const expectedResult = {
+                products: [],
+                storeAddresses: {},
+            }
+
+            const actualResult = await testUnit.search(givenQuery);
+
+            expect(actualResult).toStrictEqual(expectedResult);
+            expect(dmSearch.productSearch).toHaveBeenCalledTimes(0);
+            expect(rossmannSearch.productSearch).toHaveBeenCalledTimes(0);
+            expect(global.Promise.all).toHaveBeenCalledTimes(0);
+            expect(testUnit.mergeResults).toHaveBeenCalledTimes(0);
+        })
+
         it('should call dmSearch.productSearch(), rossmann.productSearch(), Promise.all(), reduceProducts() and return a correctly formed object', async () => {
             const givenQuery = 'query';
             const givenProducts = ['product1'];
