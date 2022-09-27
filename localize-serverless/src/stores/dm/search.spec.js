@@ -12,41 +12,12 @@ const testUnit = require('./search');
 describe('stores/DM/search', () => {
     describe('mapProducts()', () => {
         beforeEach(() => {
-            jest.spyOn(testUnit, 'getProductAvailability')
+            jest.spyOn(testUnit, 'getProductAvailability').mockReturnValueOnce(['availability']);
         })
 
         afterEach(() => {
             testUnit.getProductAvailability.mockRestore();
         });
-
-        it('should return filter out products that have no availability', async () => {
-            const givenProducts = [{
-                gtin: 987,
-                dan: 123,
-                title: 'productTitle',
-                imageUrlTemplates: ['some/url'],
-                price: {
-                    formattedValue: '123€',
-                    value: 123,
-                }
-            }]
-            const givenStoreAddressesMap = new Map();
-            const givenStoreIds = [1];
-            testUnit.getProductAvailability.mockReturnValueOnce([]);
-
-            const expectedProducts = []
-
-            const actualProducts = await testUnit.mapProducts({ products: givenProducts, storeAddressesMap: givenStoreAddressesMap, storeIds: givenStoreIds })
-
-            expect(actualProducts).toStrictEqual(expectedProducts);
-            expect(testUnit.getProductAvailability).toHaveBeenCalledTimes(1);
-            expect(testUnit.getProductAvailability).toHaveBeenCalledWith({
-                dan: 123,
-                storeAddressesMap: givenStoreAddressesMap,
-                storeIds: givenStoreIds,
-                price: givenProducts[0].price
-            });
-        })
 
         it('should return a correctly formed product', async () => {
             const givenProducts = [{
@@ -61,7 +32,6 @@ describe('stores/DM/search', () => {
             }]
             const givenStoreAddressesMap = new Map();
             const givenStoreIds = [1];
-            testUnit.getProductAvailability.mockReturnValueOnce(['availability']);
 
             const expectedProducts = [{
                 gtin: '987',
@@ -99,7 +69,6 @@ describe('stores/DM/search', () => {
             }]
             const givenStoreAddressesMap = new Map();
             const givenStoreIds = [1];
-            testUnit.getProductAvailability.mockReturnValueOnce(['availability']);
 
             const expectedProducts = [{
                 gtin: '987',

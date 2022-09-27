@@ -13,16 +13,16 @@ module.exports = {
      * @param { Array<Object> } products
      * @param { Map } storeAddressesMap
      * @param { Array<string> }storeIds
-     * @returns { Promise<Awaited<Array<Product>>> }
+     * @returns { Promise<Awaited<Array<Object>>> }
      */
     async mapProducts({ products, storeAddressesMap, storeIds }) {
         const promises = products.map(async ({ dan, gtin, title, imageUrlTemplates, price }) => {
 
             const availableAt = await this.getProductAvailability({ dan, storeAddressesMap, storeIds, price});
 
-            if(_.isEmpty(availableAt)) {
-                return undefined;
-            }
+            // if(_.isEmpty(availableAt)) {
+            //     return undefined;
+            // }
 
             const imageUrl = imageUrlTemplates[0].replace('{transformations}', 'f_auto,q_auto,c_fit,h_270,w_260');
 
@@ -35,8 +35,9 @@ module.exports = {
             };
         });
 
-        const mappedProducts = await Promise.all(promises);
-        return _.compact(mappedProducts);
+        // const mappedProducts = await Promise.all(promises);
+        // return _.compact(mappedProducts);
+        return Promise.all(promises);
     },
 
     /**

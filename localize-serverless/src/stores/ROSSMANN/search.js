@@ -71,10 +71,6 @@ module.exports = {
                 price
             })
 
-            if (_.isEmpty(availableAt)) {
-                return undefined;
-            }
-
             const smallerImageUrl = `${normalimageurl}?width=310&height=140&fit=bounds`;
 
             return {
@@ -84,10 +80,9 @@ module.exports = {
                 price,
                 availableAt,
             };
-        })
+        });
 
-        const mappedProducts = await Promise.all(promises);
-        return _.compact(mappedProducts);
+        return Promise.all(promises);
     },
 
     async productSearch(query, storeAddressesMap) {

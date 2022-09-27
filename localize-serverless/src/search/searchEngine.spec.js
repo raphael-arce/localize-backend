@@ -23,7 +23,7 @@ describe('search/searchEngine', () => {
             expect(rossmannSearch.productSearch).toHaveBeenCalledTimes(0);
             expect(global.Promise.all).toHaveBeenCalledTimes(0);
             expect(testUnit.mergeResults).toHaveBeenCalledTimes(0);
-        })
+        });
 
         it('should call dmSearch.productSearch(), rossmann.productSearch(), Promise.all(), reduceProducts() and return a correctly formed object', async () => {
             const givenQuery = 'query';
@@ -52,7 +52,7 @@ describe('search/searchEngine', () => {
             ]);
             expect(testUnit.mergeResults).toHaveBeenCalledTimes(1);
             expect(testUnit.mergeResults).toHaveBeenCalledWith([givenProducts, givenProducts]);
-        })
+        });
     });
 
     describe('mergeResults()', () => {
@@ -78,7 +78,6 @@ describe('search/searchEngine', () => {
     });
 
     describe('mergeProducts()', () => {
-
         beforeEach(() => {
             jest.spyOn(testUnit, 'getProductWithPriceComparison').mockImplementation((product) => {
                 return {
@@ -129,6 +128,45 @@ describe('search/searchEngine', () => {
             expect(testUnit.getProductWithPriceComparison).toHaveBeenCalledTimes(1);
             expect(testUnit.getProductWithPriceComparison).toHaveBeenCalledWith(givenProduct1);
         });
+
+        it('should not update the priceRange and not add the availabilities if there is no availability', async () => {
+            const givenProduct1 = {
+                gtin: 1,
+                price: {
+                    value: 2,
+                    formattedValue: '2€'
+                },
+                availableAt: ['store_1']
+            };
+            const givenProduct2 = {
+                gtin: 1,
+                price: {
+                    value: 10,
+                    formattedValue: '10€'
+                },
+                availableAt: []
+            };
+
+            const givenProducts = [givenProduct1, givenProduct2];
+            const givenProductMap = new Map();
+
+            const expectedProductMap = new Map().set(1, {
+                gtin: 1,
+                priceRange: {
+                    min: 2,
+                    formattedMin: '2€',
+                    max: 2,
+                    formattedMax: '2€',
+                },
+                availableAt: ['store_1'],
+            })
+
+            testUnit.mergeProducts(givenProducts, givenProductMap);
+
+            expect(givenProductMap).toStrictEqual(expectedProductMap);
+            expect(testUnit.getProductWithPriceComparison).toHaveBeenCalledTimes(1);
+            expect(testUnit.getProductWithPriceComparison).toHaveBeenNthCalledWith(1, givenProduct1);
+        })
 
         it('should update the priceRange.min and priceRange.formattedMin correctly', async () => {
             const givenProduct1 = {
@@ -208,7 +246,7 @@ describe('search/searchEngine', () => {
             expect(testUnit.getProductWithPriceComparison).toHaveBeenNthCalledWith(1, givenProduct1);
         })
 
-        it('should not update the priceRange', async () => {
+        it('should not update the priceRange if the prices are the same', async () => {
             const givenProduct1 = {
                 gtin: 1,
                 price: {

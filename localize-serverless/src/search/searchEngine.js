@@ -1,5 +1,6 @@
 const dm = require("../stores/dm/search");
 const rossmann = require("../stores/ROSSMANN/search");
+const _ = require("lodash");
 
 module.exports = {
     returnValueOfMapEntry([key, value]){
@@ -27,6 +28,10 @@ module.exports = {
         products.forEach(product => {
             if (!productMap.has(product.gtin)) {
                 productMap.set(product.gtin, this.getProductWithPriceComparison(product));
+                return;
+            }
+
+            if (_.isEmpty(product.availableAt)) {
                 return;
             }
 
