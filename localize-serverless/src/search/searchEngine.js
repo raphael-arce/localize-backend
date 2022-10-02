@@ -26,12 +26,12 @@ module.exports = {
 
     mergeProducts(products, productMap) {
         products.forEach(product => {
-            if (!productMap.has(product.gtin)) {
-                productMap.set(product.gtin, this.getProductWithPriceComparison(product));
+            if (_.isEmpty(product.availableAt)) {
                 return;
             }
 
-            if (_.isEmpty(product.availableAt)) {
+            if (!productMap.has(product.gtin)) {
+                productMap.set(product.gtin, this.getProductWithPriceComparison(product));
                 return;
             }
 

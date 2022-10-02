@@ -99,35 +99,35 @@ describe('search/searchEngine', () => {
             testUnit.getProductWithPriceComparison.mockRestore();
         })
 
-        it('should save a productWithPriceComparison in the given productMap if it does not exist', async () => {
+        it('should not add the product to the productMap if there is no availability', async () => {
             const givenProduct1 = {
                 gtin: 1,
                 price: {
-                    value: 1,
-                    formattedValue: '1€'
+                    value: 2,
+                    formattedValue: '2€'
                 },
-                availableAt: ['store_1']
+                availableAt: []
             };
-            const givenProducts = [givenProduct1];
+            const givenProduct2 = {
+                gtin: 1,
+                price: {
+                    value: 10,
+                    formattedValue: '10€'
+                },
+                availableAt: []
+            };
+
+            const givenProducts = [givenProduct1, givenProduct2];
             const givenProductMap = new Map();
 
-            const expectedProductMap = new Map().set(1, {
-                gtin: 1,
-                priceRange: {
-                    min: 1,
-                    formattedMin: '1€',
-                    max: 1,
-                    formattedMax: '1€',
-                },
-                availableAt: ['store_1'],
-            })
+            const expectedProductMap = new Map()
 
             testUnit.mergeProducts(givenProducts, givenProductMap);
 
             expect(givenProductMap).toStrictEqual(expectedProductMap);
-            expect(testUnit.getProductWithPriceComparison).toHaveBeenCalledTimes(1);
-            expect(testUnit.getProductWithPriceComparison).toHaveBeenCalledWith(givenProduct1);
-        });
+            expect(testUnit.getProductWithPriceComparison).toHaveBeenCalledTimes(0);
+        })
+
 
         it('should not update the priceRange and not add the availabilities if there is no availability', async () => {
             const givenProduct1 = {
@@ -167,6 +167,36 @@ describe('search/searchEngine', () => {
             expect(testUnit.getProductWithPriceComparison).toHaveBeenCalledTimes(1);
             expect(testUnit.getProductWithPriceComparison).toHaveBeenNthCalledWith(1, givenProduct1);
         })
+
+        it('should save a productWithPriceComparison in the given productMap if it does not exist', async () => {
+            const givenProduct1 = {
+                gtin: 1,
+                price: {
+                    value: 1,
+                    formattedValue: '1€'
+                },
+                availableAt: ['store_1']
+            };
+            const givenProducts = [givenProduct1];
+            const givenProductMap = new Map();
+
+            const expectedProductMap = new Map().set(1, {
+                gtin: 1,
+                priceRange: {
+                    min: 1,
+                    formattedMin: '1€',
+                    max: 1,
+                    formattedMax: '1€',
+                },
+                availableAt: ['store_1'],
+            })
+
+            testUnit.mergeProducts(givenProducts, givenProductMap);
+
+            expect(givenProductMap).toStrictEqual(expectedProductMap);
+            expect(testUnit.getProductWithPriceComparison).toHaveBeenCalledTimes(1);
+            expect(testUnit.getProductWithPriceComparison).toHaveBeenCalledWith(givenProduct1);
+        });
 
         it('should update the priceRange.min and priceRange.formattedMin correctly', async () => {
             const givenProduct1 = {
