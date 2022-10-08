@@ -62,7 +62,7 @@ module.exports = {
     },
 
     async mapProducts({ products, storeAddressesMap, postcodes }) {
-        const promises = products.map(async ({code, dan, name, normalimageurl, price}) => {
+        const promises = products.map(async ({code, dan, name, teaserimageurl, price}) => {
 
             const availableAt = await this.getProductAvailability({
                 dan,
@@ -71,7 +71,7 @@ module.exports = {
                 price
             })
 
-            const smallerImageUrl = `${normalimageurl}?width=310&height=140&fit=bounds`;
+            const smallerImageUrl = `${teaserimageurl}?width=310&height=140&fit=bounds`;
 
             return {
                 gtin: code,

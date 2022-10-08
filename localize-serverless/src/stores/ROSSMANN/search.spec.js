@@ -128,7 +128,7 @@ describe('stores/ROSSMANN/search', () => {
                 code: 987,
                 dan: 123,
                 name: 'productTitle',
-                normalimageurl: ['some/url'],
+                teaserimageurl: ['some/url'],
                 price: {
                     formattedValue: '123€',
                     value: 123,
@@ -165,7 +165,7 @@ describe('stores/ROSSMANN/search', () => {
                 code: 987,
                 dan: 123,
                 name: 'productTitle',
-                normalimageurl: ['some/url'],
+                teaserimageurl: ['some/url'],
                 price: {
                     formattedValue: '123€',
                     value: 123,
