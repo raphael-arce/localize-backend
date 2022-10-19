@@ -79,20 +79,7 @@ describe('search/searchEngine', () => {
 
     describe('mergeProducts()', () => {
         beforeEach(() => {
-            jest.spyOn(testUnit, 'getProductWithPriceComparison').mockImplementation((product) => {
-                return {
-                    gtin: product.gtin,
-                    title: product.title,
-                    imageUrl: product.imageUrl,
-                    priceRange: {
-                        min: product.price.value,
-                        formattedMin: product.price.formattedValue,
-                        max: product.price.value,
-                        formattedMax: product.price.formattedValue,
-                    },
-                    availableAt: product.availableAt
-                }
-            });
+            jest.spyOn(testUnit, 'getProductWithPriceComparison');
         });
 
         afterEach(() => {
@@ -158,7 +145,10 @@ describe('search/searchEngine', () => {
                     max: 2,
                     formattedMax: '2€',
                 },
-                availableAt: ['store_1'],
+                availableAt: {
+                    type: 'FeatureCollection',
+                    features: ['store_1']
+                },
             })
 
             testUnit.mergeProducts(givenProducts, givenProductMap);
@@ -188,7 +178,10 @@ describe('search/searchEngine', () => {
                     max: 1,
                     formattedMax: '1€',
                 },
-                availableAt: ['store_1'],
+                availableAt: {
+                    type: 'FeatureCollection',
+                    features: ['store_1'],
+                },
             })
 
             testUnit.mergeProducts(givenProducts, givenProductMap);
@@ -205,7 +198,7 @@ describe('search/searchEngine', () => {
                     value: 2,
                     formattedValue: '2€'
                 },
-                availableAt: ['store_1']
+                availableAt: ['store_1'],
             };
             const givenProduct2 = {
                 gtin: 1,
@@ -213,7 +206,7 @@ describe('search/searchEngine', () => {
                     value: 1,
                     formattedValue: '1€'
                 },
-                availableAt: ['store_2']
+                availableAt:  ['store_2'],
             };
 
             const givenProducts = [givenProduct1, givenProduct2];
@@ -227,7 +220,10 @@ describe('search/searchEngine', () => {
                     max: 2,
                     formattedMax: '2€',
                 },
-                availableAt: ['store_1', 'store_2'],
+                availableAt: {
+                    type: 'FeatureCollection',
+                    features: ['store_1', 'store_2'],
+                },
             })
 
             testUnit.mergeProducts(givenProducts, givenProductMap);
@@ -244,7 +240,7 @@ describe('search/searchEngine', () => {
                     value: 2,
                     formattedValue: '2€'
                 },
-                availableAt: ['store_1']
+                availableAt: ['store_1'],
             };
             const givenProduct2 = {
                 gtin: 1,
@@ -252,7 +248,7 @@ describe('search/searchEngine', () => {
                     value: 3,
                     formattedValue: '3€'
                 },
-                availableAt: ['store_2']
+                availableAt: ['store_2'],
             };
 
             const givenProducts = [givenProduct1, givenProduct2];
@@ -266,7 +262,10 @@ describe('search/searchEngine', () => {
                     max: 3,
                     formattedMax: '3€',
                 },
-                availableAt: ['store_1', 'store_2'],
+                availableAt: {
+                    type: 'FeatureCollection',
+                    features: ['store_1', 'store_2'],
+                },
             })
 
             testUnit.mergeProducts(givenProducts, givenProductMap);
@@ -283,7 +282,7 @@ describe('search/searchEngine', () => {
                     value: 2,
                     formattedValue: '2€'
                 },
-                availableAt: ['store_1']
+                availableAt:  ['store_1'],
             };
             const givenProduct2 = {
                 gtin: 1,
@@ -291,7 +290,7 @@ describe('search/searchEngine', () => {
                     value: 2,
                     formattedValue: '2€'
                 },
-                availableAt: ['store_2']
+                availableAt:  ['store_2'],
             };
 
             const givenProducts = [givenProduct1, givenProduct2];
@@ -305,8 +304,11 @@ describe('search/searchEngine', () => {
                     max: 2,
                     formattedMax: '2€',
                 },
-                availableAt: ['store_1', 'store_2'],
-            })
+                availableAt: {
+                    type: 'FeatureCollection',
+                    features: ['store_1', 'store_2'],
+                },
+            });
 
             testUnit.mergeProducts(givenProducts, givenProductMap);
 
@@ -339,7 +341,10 @@ describe('search/searchEngine', () => {
                     max: 'priceValue',
                     formattedMax: 'formattedPriceValue',
                 },
-                availableAt: ['availabilities']
+                availableAt: {
+                    type: 'FeatureCollection',
+                    features: ['availabilities']
+                }
             }
 
             const actualProductWithPriceComparison = testUnit.getProductWithPriceComparison(givenProduct);

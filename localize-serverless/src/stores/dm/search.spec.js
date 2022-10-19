@@ -2,9 +2,27 @@
 
 jest.mock('axios');
 jest.mock('./data/storesBerlin.json', () => ({
-    '1': 'address1',
-    '2': 'address2',
-    '3': 'address3',
+    '1': {
+        'address': 'address1',
+        'location': {
+            'lat': 111,
+            'lon': 333
+        },
+    },
+    '2': {
+        'address': 'address2',
+        'location': {
+            'lat': 222,
+            'lon': 444
+        },
+    },
+    '3':  {
+        'address': 'address3',
+        'location': {
+            'lat': 333,
+            'lon': 555
+        },
+    },
 }), { virtual: true });
 const axios = require('axios');
 const testUnit = require('./search');
@@ -144,18 +162,29 @@ describe('stores/DM/search', () => {
             const givenPrice = {
                 formattedValue: '123€',
             };
+            const givenUrl = '/someUrl';
             const givenStoreAddressesMap = new Map();
+
             const expectedReductedAvailabilityResult = {
-                storeId: 'DM_1',
-                inStock: true,
-                stockLevel: 12,
-                formattedPrice: givenPrice.formattedValue,
-            }
+                geometry: {
+                    type: 'Point',
+                    coordinates: [333, 111]
+                },
+                properties: {
+                    storeId: 'DM_1',
+                    inStock: true,
+                    stockLevel: 12,
+                    formattedPrice: givenPrice.formattedValue,
+                    url: `https://www.dm.de${givenUrl}`,
+                },
+                type: 'Feature',
+            };
 
             const actualReducedAvailabilityResult = testUnit.reduceAvailabilityResult({
                 availabilityResult: givenAvailabilityResult,
                 storeAddressesMap: givenStoreAddressesMap,
-                price: givenPrice
+                price: givenPrice,
+                relativeProductUrl: givenUrl,
             });
 
             expect(actualReducedAvailabilityResult).toStrictEqual([expectedReductedAvailabilityResult]);
@@ -183,7 +212,13 @@ describe('stores/DM/search', () => {
                 }
             }
             const givenStoreAddressesMap = new Map();
-            const expectedStoreAddressesMap = new Map().set('DM_1', 'address1')
+            const expectedStoreAddressesMap = new Map().set('DM_1', {
+                'address': 'address1',
+                'location': {
+                    'lat': 111,
+                    'lon': 333
+                },
+            })
 
             testUnit.reduceAvailabilityResult({
                 availabilityResult: givenAvailabilityResult,

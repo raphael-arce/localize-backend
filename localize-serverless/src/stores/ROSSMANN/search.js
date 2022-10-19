@@ -7,36 +7,44 @@ const RELEVANT_POSTCODES = require('./data/reducedPostcodesWithShops.json');
 const STORES = require('./data/storesBerlin.json');
 
 module.exports = {
-    reduceAvailabilityResult({ availabilityResult, storeAddressesMap, price}) {
+
+    reduceAvailabilityResult({ availabilityMap, availabilityResult, storeAddressesMap, price, url }) {
         if (!availabilityResult.data || !availabilityResult.data.store) {
-            return [];
+            return;
         }
 
-        return availabilityResult.data.store.reduce((accumulator, { id, productInfo , city }) => {
+        availabilityResult.data.store.forEach(({ id, productInfo , city }) => {
             const { available } = productInfo[0];
             const uniqueStoreId = `ROSSMANN_${id}`
 
             if (!available
                 || city !== 'Berlin'
-                || accumulator.some(availability => availability.storeId ===  uniqueStoreId)) {
-                return accumulator;
+                || availabilityMap.has(uniqueStoreId)) {
+                return;
             }
 
-            if (!storeAddressesMap.has(uniqueStoreId)) {
-                storeAddressesMap.set(uniqueStoreId, STORES[id]);
-            }
+            storeAddressesMap.set(uniqueStoreId, STORES[id]);
 
-            accumulator.push({
-                storeId: uniqueStoreId,
-                inStock: available,
-                formattedPrice: price.formattedValue,
+            const {lat, lon} = STORES[id].location;
+
+            availabilityMap.set(uniqueStoreId, {
+                type: 'Feature',
+                properties: {
+                    storeId: uniqueStoreId,
+                    inStock: available,
+                    formattedPrice: price.formattedValue,
+                    url: `https://www.rossmann.de/de${url}`
+                },
+                geometry: {
+                    type: "Point",
+                    coordinates: [lon, lat]
+                }
             });
-
-            return accumulator;
-        }, []);
+        });
     },
 
-    async getProductAvailability({ dan, postcodes, storeAddressesMap, price }) {
+    async getProductAvailability({ dan, postcodes, storeAddressesMap, price, url }) {
+        const availabilityMap = new Map();
         const availabilityPromises = postcodes.map(async (postcode) => {
             try {
                 const availabilityResult = await axios(
@@ -44,31 +52,32 @@ module.exports = {
                 );
 
                 return this.reduceAvailabilityResult({
+                    availabilityMap,
                     availabilityResult,
                     storeAddressesMap,
-                    price
-                })
+                    price,
+                    url
+                });
             } catch (error) {
                 console.error(error);
                 return [];
             }
-
         });
 
-        const availableAtUnflattened = await Promise.all(availabilityPromises);
-        const availableAt = _.compact(_.flattenDeep(availableAtUnflattened));
+        await Promise.all(availabilityPromises);
 
-        return availableAt;
+        return Array.from(availabilityMap.values());
     },
 
     async mapProducts({ products, storeAddressesMap, postcodes }) {
-        const promises = products.map(async ({code, dan, name, teaserimageurl, price}) => {
+        const promises = products.map(async ({code, dan, name, teaserimageurl, price, url}) => {
 
             const availableAt = await this.getProductAvailability({
                 dan,
                 postcodes,
                 storeAddressesMap,
-                price
+                price,
+                url
             })
 
             const smallerImageUrl = `${teaserimageurl}?width=310&height=140&fit=bounds`;

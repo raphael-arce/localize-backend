@@ -20,7 +20,10 @@ module.exports = {
                 max: value,
                 formattedMax: formattedValue,
             },
-            availableAt
+            availableAt: {
+                type: 'FeatureCollection',
+                features: [...availableAt],
+            }
         }
     },
 
@@ -45,7 +48,7 @@ module.exports = {
                 existingProduct.priceRange.formattedMax = product.price.formattedValue;
             }
 
-            existingProduct.availableAt.push(...product.availableAt);
+            existingProduct.availableAt.features.push(...product.availableAt);
         });
     },
 

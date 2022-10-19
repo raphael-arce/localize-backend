@@ -2,51 +2,70 @@
 
 jest.mock('axios');
 jest.mock('./data/storesBerlin.json', () => ({
-    '1': 'address1',
-    '2': 'address2',
-    '3': 'address3',
+    '1': {
+        'address': 'address1',
+        'location': {
+            'lat': 111,
+            'lon': 333
+        },
+    },
+    '2': {
+        'address': 'address2',
+        'location': {
+            'lat': 222,
+            'lon': 444
+        },
+    },
+    '3': {
+        'address': 'address3',
+        'location': {
+            'lat': 333,
+            'lon': 555
+        },
+    },
 }), { virtual: true });
 const axios = require('axios');
 const testUnit = require('./search');
 
 describe('stores/ROSSMANN/search', () => {
     describe('reduceAvailabilityResult()', () => {
-        it('should return an empty string when availabilityResult has no data', () => {
-            const givenAvailabilityResult = {};
-            const givenStoreAddressesMap = new Map();
-            const givenPrice = 'price';
+        it('should not update the given availabilityMap when availabilityResult has no data', () => {
+            const givenAvailabilityMap = new Map();
 
-            const expectedReduced = []
-
-            const actualReduced = testUnit.reduceAvailabilityResult({
-                availabilityResult: givenAvailabilityResult,
-                storeAddressesMap: givenStoreAddressesMap,
-                price: givenPrice
+            testUnit.reduceAvailabilityResult({
+                availabilityResult: {},
+                storeAddressesMap: new Map(),
+                price: 'givenPrice',
+                url: 'givenUrl'
             })
 
-            expect(actualReduced).toStrictEqual(expectedReduced);
+            expect(givenAvailabilityMap.size).toBe(0);
         })
 
-        it('should return an empty string when availabilityResult.data has no store', () => {
-            const givenAvailabilityResult = { data: {}};
-            const givenStoreAddressesMap = new Map();
-            const givenPrice = 'price';
+        it('should not update the given availabilityMap availabilityResult.data has no store', () => {
+            const givenAvailabilityMap = new Map();
+            const givenAvailabilityResult = { data: {} };
 
-            const expectedReduced = []
-
-            const actualReduced = testUnit.reduceAvailabilityResult({
+            testUnit.reduceAvailabilityResult({
                 availabilityResult: givenAvailabilityResult,
-                storeAddressesMap: givenStoreAddressesMap,
-                price: givenPrice
+                storeAddressesMap: new Map(),
+                price: 'givenPrice',
+                url: 'givenUrl'
             })
 
-            expect(actualReduced).toStrictEqual(expectedReduced);
+            expect(givenAvailabilityMap.size).toBe(0);
         })
 
-        it('should reduce the available stores to where the product is in stock or those located in Berlin', async () => {
+        it('should iterate over the available stores to and add the correctly formed products in stock or located in Berlin to the availabilityMap', async () => {
+            const givenAvailabilityMap = new Map();
             const givenAvailabilityResult = {
                 data: {
                     store: [
+                        {
+                            id: 1,
+                            productInfo: [{ available : true}],
+                            city: 'Berlin',
+                        },
                         {
                             id: 1,
                             productInfo: [{ available : true}],
@@ -68,23 +87,40 @@ describe('stores/ROSSMANN/search', () => {
             const givenPrice = {
                 formattedValue: '123€',
             };
+            const givenUrl = 'some/url';
             const givenStoreAddressesMap = new Map();
-            const expectedReductedAvailabilityResult = {
-                storeId: 'ROSSMANN_1',
-                inStock: true,
-                formattedPrice: givenPrice.formattedValue,
-            }
+            const expectedReductedAvailabilityResult = new Map([
+                [
+                    'ROSSMANN_1',
+                    {
+                        type: 'Feature',
+                        properties: {
+                            storeId: 'ROSSMANN_1',
+                            inStock: true,
+                            formattedPrice: givenPrice.formattedValue,
+                            url: `https://www.rossmann.de/de${givenUrl}`,
+                        },
+                        geometry: {
+                            type: 'Point',
+                            coordinates: [333, 111],
+                        },
+                    }
+                ]
+            ]);
 
-            const actualReducedAvailabilityResult = testUnit.reduceAvailabilityResult({
+            testUnit.reduceAvailabilityResult({
+                availabilityMap: givenAvailabilityMap,
                 availabilityResult: givenAvailabilityResult,
                 storeAddressesMap: givenStoreAddressesMap,
-                price: givenPrice
+                price: givenPrice,
+                url: givenUrl,
             });
 
-            expect(actualReducedAvailabilityResult).toStrictEqual([expectedReductedAvailabilityResult]);
+            expect(givenAvailabilityMap).toStrictEqual(expectedReductedAvailabilityResult);
         });
 
         it('should add the available stores\' address to the storeAddressesMap only when it has not been added yet', async () => {
+            const givenAvailabilityMap = new Map();
             const givenAvailabilityResult = {
                 data: {
                     store: [
@@ -102,12 +138,20 @@ describe('stores/ROSSMANN/search', () => {
                 }
             }
             const givenStoreAddressesMap = new Map();
-            const expectedStoreAddressesMap = new Map().set('ROSSMANN_1', 'address1');
+            const expectedStoreAddressesMap = new Map().set('ROSSMANN_1', {
+                'address': 'address1',
+                'location': {
+                    'lat': 111,
+                    'lon': 333
+                },
+            });
 
             testUnit.reduceAvailabilityResult({
+                availabilityMap: givenAvailabilityMap,
                 availabilityResult: givenAvailabilityResult,
                 storeAddressesMap: givenStoreAddressesMap,
                 price: 'somePrice',
+                url: '/someUrl'
             });
 
             expect(givenStoreAddressesMap).toStrictEqual(expectedStoreAddressesMap);
@@ -208,29 +252,33 @@ describe('stores/ROSSMANN/search', () => {
         it('should call axios with correctly form url and return (and call) reduceAvailabilityResult()', async () => {
             const givenDan = 123;
             const givenStoreAddressesMap = new Map();
+            jest.spyOn(givenStoreAddressesMap, 'values');
             const givenPostcodes = [1]
-            const expectedProductAvailability = ['someAvailability'];
-            axios.mockResolvedValueOnce(expectedProductAvailability);
-            testUnit.reduceAvailabilityResult.mockReturnValueOnce(expectedProductAvailability);
+            axios.mockResolvedValueOnce({});
+            testUnit.reduceAvailabilityResult.mockResolvedValueOnce({})
 
             const actualProductAvailability = await testUnit.getProductAvailability({
                 dan: givenDan,
                 storeAddressesMap: givenStoreAddressesMap,
                 postcodes: givenPostcodes,
                 price: 'somePrice',
+                url: 'someUrl',
             });
 
-            expect(actualProductAvailability).toStrictEqual(expectedProductAvailability);
+            expect(actualProductAvailability).toStrictEqual([]);
             expect(axios).toHaveBeenCalledTimes(1)
             expect(axios).toHaveBeenCalledWith(
                 `${process.env.ROSSMANN_STORE_AVAILABILITY_API}/storefinder/.rest/store?dan=${givenDan}&q=${givenPostcodes[0]}`
             );
             expect(testUnit.reduceAvailabilityResult).toHaveBeenCalledTimes(1);
             expect(testUnit.reduceAvailabilityResult).toHaveBeenCalledWith({
-                availabilityResult: expectedProductAvailability,
+                availabilityMap: givenStoreAddressesMap,
+                availabilityResult: {},
                 storeAddressesMap: givenStoreAddressesMap,
-                price: 'somePrice'
+                price: 'somePrice',
+                url: 'someUrl'
             });
+            expect(givenStoreAddressesMap.values).toHaveBeenCalledTimes(0);
         });
 
         it('should return an empty array when an error occurs', async () => {

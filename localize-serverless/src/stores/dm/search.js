@@ -8,21 +8,11 @@ const _ = require('lodash');
 const STORE_IDS = Object.keys(STORES);
 
 module.exports = {
-    /**
-     *
-     * @param { Array<Object> } products
-     * @param { Map } storeAddressesMap
-     * @param { Array<string> }storeIds
-     * @returns { Promise<Awaited<Array<Object>>> }
-     */
-    async mapProducts({ products, storeAddressesMap, storeIds }) {
-        const promises = products.map(async ({ dan, gtin, title, imageUrlTemplates, price }) => {
 
-            const availableAt = await this.getProductAvailability({ dan, storeAddressesMap, storeIds, price});
+    async mapProducts({products, storeAddressesMap, storeIds}) {
+        const promises = products.map(async ({dan, gtin, title, imageUrlTemplates, price, relativeProductUrl}) => {
 
-            // if(_.isEmpty(availableAt)) {
-            //     return undefined;
-            // }
+            const availableAt = await this.getProductAvailability({dan, storeAddressesMap, storeIds, price, relativeProductUrl});
 
             const imageUrl = imageUrlTemplates[0].replace('{transformations}', 'f_auto,q_auto,c_fit,h_270,w_260');
 
@@ -35,79 +25,71 @@ module.exports = {
             };
         });
 
-        // const mappedProducts = await Promise.all(promises);
-        // return _.compact(mappedProducts);
         return Promise.all(promises);
     },
 
-    /**
-     * *
-     * @param { Object } availabilityResult
-     * @param { Map } storeAddressesMap
-     * @param { Object } price
-     * @returns { Array<availableAt> }
-     */
-    reduceAvailabilityResult({ availabilityResult, storeAddressesMap, price }) {
+    reduceAvailabilityResult({availabilityResult, storeAddressesMap, price, relativeProductUrl}) {
         if (!availabilityResult.data || !availabilityResult.data.storeAvailability) {
             return [];
         }
 
-        return availabilityResult.data.storeAvailability.reduce((accumulator, { store, inStock, stockLevel }) => {
+        return availabilityResult.data.storeAvailability.reduce((accumulator, {store, inStock, stockLevel}) => {
             if (!inStock) {
                 return accumulator;
             }
 
-            const { storeNumber } = store
+            const {storeNumber} = store
             const uniqueStoreId = `DM_${storeNumber}`;
             if (!storeAddressesMap.has(uniqueStoreId)) {
                 storeAddressesMap.set(uniqueStoreId, STORES[storeNumber]);
             }
 
+            const {lat, lon} = STORES[storeNumber].location;
+
             accumulator.push({
-                storeId: uniqueStoreId,
-                inStock,
-                formattedPrice: price.formattedValue,
-                stockLevel,
+                type: "Feature",
+                properties: {
+                    storeId: uniqueStoreId,
+                    inStock,
+                    formattedPrice: price.formattedValue,
+                    stockLevel,
+                    url: `https://www.dm.de${relativeProductUrl}`
+                },
+                geometry: {
+                    type: "Point",
+                    coordinates: [lon, lat]
+                }
             });
 
             return accumulator;
         }, []);
     },
 
-    /**
-     *
-     * @param { string } dan
-     * @param { Map } storeAddressesMap
-     * @param { Array<string> } storeIds
-     * @param { Object } price
-     * @returns { Promise<availableAt[]> }
-     */
-    async getProductAvailability({ dan, storeAddressesMap, storeIds, price }) {
+    async getProductAvailability({dan, storeAddressesMap, storeIds, price, relativeProductUrl}) {
         try {
             const availabilityResult = await axios(
                 `${process.env.DM_STORE_AVAILABILITY_API}store-availability/DE/products/dans/${dan}/availability-with-listing?storeNumbers=${storeIds}&view=basic`,
             );
 
-            return this.reduceAvailabilityResult({ availabilityResult, storeAddressesMap, price });
+            return this.reduceAvailabilityResult({
+                availabilityResult,
+                storeAddressesMap,
+                price,
+                relativeProductUrl
+            });
         } catch (error) {
             console.error(error);
             return [];
         }
     },
 
-    /**
-     *
-     * @param { string } query
-     * @param { Map } storeAddressesMap
-     * @returns { Promise<Array<Product>> }
-     */
     async productSearch(query, storeAddressesMap) {
         try {
             const searchResult = await axios(
                 `${process.env.DM_PRODUCT_SEARCH_API}/de/search?query=${encodeURI(query)}&searchType=product&type=search`
             );
 
-            if (!searchResult.data || !searchResult.data.products ) {
+            if (!searchResult.data || !searchResult.data.products) {
                 return [];
             }
 
