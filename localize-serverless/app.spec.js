@@ -30,6 +30,31 @@ describe('app', () => {
     expect(actualResponse).toEqual(expectedResponse);
   });
 
+  it('should return a correctly formed response when no queryStringParams are given', async () => {
+    const givenEvent = {
+      queryStringParameters: undefined,
+    };
+    const givenSearchResults = [];
+
+    jest
+      .spyOn(searchEngine, 'search')
+      .mockImplementationOnce(() => givenSearchResults);
+
+    const expectedResponse = {
+      body: '[]',
+      headers: {
+        'Access-Control-Allow-Headers': 'Content-Type',
+        'Access-Control-Allow-Methods': 'OPTIONS,GET',
+        'Access-Control-Allow-Origin': '*',
+      },
+      statusCode: 200,
+    };
+
+    const actualResponse = await app.lambdaHandler(givenEvent);
+
+    expect(actualResponse).toEqual(expectedResponse);
+  });
+
   it('should return a correctly formed response when no query is given', async () => {
     const givenEvent = {
       queryStringParameters: {},
