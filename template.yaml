@@ -16,7 +16,7 @@ Resources:
     Properties:
       CodeUri: localize-serverless/
       Handler: app.lambdaHandler
-      Runtime: nodejs16.x
+      Runtime: nodejs18.x
       Architectures:
         - arm64
       Events:
@@ -49,6 +49,6 @@ Metadata:
     LicenseUrl: LICENSE.txt
     ReadmeUrl: README.md
     Labels: ['tests']
-    HomePageUrl: https://gitlab.com/localize1/localize-serverless
+    HomePageUrl: https://github.com/raphael-arce/localize-backend
     SemanticVersion: 0.0.1
-    SourceCodeUrl: https://gitlab.com/localize1/localize-serverless
+    SourceCodeUrl: https://github.com/raphael-arce/localize-backend
