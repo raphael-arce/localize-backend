@@ -19,7 +19,8 @@ exports.lambdaHandler = async (event) => {
   try {
     let q = '';
 
-    if (event.queryStringParameters) {
+    if (event.queryStringParameters) 
+{
       q = event.queryStringParameters['q'] ?? '';
     }
 

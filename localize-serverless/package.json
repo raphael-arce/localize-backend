@@ -12,11 +12,14 @@
     "lodash": "4.17.21"
   },
   "scripts": {
-    "test": "jest --coverage",
+    "test": "jest",
+    "test:ci": "jest --ci",
     "prettier": "prettier --write . --ignore-path .lintignore",
     "prettier:check": "prettier --check . --ignore-path .lintignore",
     "eslint": "eslint . --fix --ignore-path .lintignore",
-    "eslint:check": "eslint . --ignore-path .lintignore"
+    "eslint:check": "eslint . --ignore-path .lintignore",
+    "lint": "npm run prettier && npm run eslint",
+    "lint:check": "npm run prettier:check && npm run eslint:check"
   },
   "devDependencies": {
     "eslint": "8.52.0",
