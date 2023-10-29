@@ -4,31 +4,21 @@ jobs:
   build-lint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
+      - name: Check out repository code  📥
+        uses: actions/checkout@v3
+      - name: Setup node 🔧
+        uses: actions/setup-node@v3
         with:
-          node-version: '18'
-      - uses: aws-actions/setup-sam@v1
-      - uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: eu-central-1
-
-      - name: Sam Build 🏗️
-        run: sam build --use-container
-
+          node-version: 18.12.x
+          cache: npm
       - name: Install dependencies 📦
-        working-directory: ./localize-serverless
         run: |
           npm ci
       - name: Lint the repository 🔬
-        working-directory: ./localize-serverless
         run: |
-          npm run lint:check
-      - name: Run tests 🧪
-        working-directory: ./localize-serverless
+          npm run lint
+      - name: Run tests 🔬
         run: |
-          npm run test:ci
+          npm run test:coverage
       - run: echo "Done 🎉"
 
