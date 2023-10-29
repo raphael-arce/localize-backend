@@ -1,0 +1,31 @@
+{
+  "name": "localize-backend",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "deploy": "wrangler deploy",
+    "dev": "wrangler dev",
+    "start": "wrangler dev",
+    "test": "node --test",
+    "test:watch": "node --test --watch",
+    "test:coverage": "node --test --experimental-test-coverage",
+    "prettier": "prettier --write . --ignore-path .lintignore",
+    "prettier:check": "prettier --check . --ignore-path .lintignore",
+    "eslint": "eslint . --fix --ignore-path .lintignore",
+    "eslint:check": "eslint . --ignore-path .lintignore",
+    "lint": "npm run prettier && npm run eslint",
+    "lint:check": "npm run prettier:check && npm run eslint:check"
+  },
+  "devDependencies": {
+    "@babel/eslint-parser": "7.22.15",
+    "@babel/plugin-syntax-import-assertions": "7.22.5",
+    "eslint": "8.52.0",
+    "eslint-config-prettier": "9.0.0",
+    "prettier": "3.0.3",
+    "wrangler": "^3.0.0"
+  },
+  "dependencies": {
+    "lodash": "4.17.21"
+  }
+}
