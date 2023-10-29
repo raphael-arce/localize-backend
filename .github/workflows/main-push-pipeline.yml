@@ -1,26 +1,17 @@
-name: Push to Main
+name: Push to Main (Deploy to Production)
+
 on:
   push:
     branches:
       - main
+
 jobs:
-  build-deploy:
+  deploy:
     runs-on: ubuntu-latest
+    name: Deploy
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
+      - uses: actions/checkout@v3
+      - name: Deploy
+        uses: cloudflare/wrangler-action@v3
         with:
-          node-version: '18'
-      - uses: aws-actions/setup-sam@v1
-      - uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: eu-central-1
-      # sam build
-      - run: sam build --use-container
-
-      # Run Unit tests- Specify unit tests here
-
-      # sam deploy
-      # - run: sam deploy --no-confirm-changeset --no-fail-on-empty-changeset --stack-name sam-hello-world --capabilities CAPABILITY_IAM --region eu-central-1
+          apiToken: ${{ secrets.CF_API_TOKEN }}
