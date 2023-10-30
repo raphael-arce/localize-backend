@@ -5,7 +5,7 @@ import testUnit from './searchEngine.js';
 
 import stores from './stores/stores.js';
 
-describe('searchEngine/searchEngine.js', () => {
+describe('unit test: searchEngine/searchEngine.js', () => {
   describe('search()', () => {
     let storeMock;
 
