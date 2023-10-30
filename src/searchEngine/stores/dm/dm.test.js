@@ -5,7 +5,7 @@ const givenSTORE_IDS = Object.keys(STORES);
 
 import testUnit from './dm.js';
 
-describe('searchEngine/stores/dm/dm.js', () => {
+describe('unit test: searchEngine/stores/dm/dm.js', () => {
   describe('productSearch()', () => {
     const givenEnv = {
       DM_PRODUCT_SEARCH_API: 'someUrl',

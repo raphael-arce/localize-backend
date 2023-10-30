@@ -19,5 +19,5 @@ jobs:
           npm run lint
       - name: Run tests 🔬
         run: |
-          npm run test:coverage
+          npm run test:unit:coverage
       - run: echo "Done 🎉"

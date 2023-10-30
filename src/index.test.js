@@ -5,7 +5,7 @@ import testUnit from './index.js';
 import searchEngine from './searchEngine/searchEngine.js';
 
 const env = {};
-describe('main entry point', () => {
+describe('unit test: main entry point', () => {
   describe('fetch()', () => {
     const headers = {
       'Access-Control-Allow-Headers': 'Content-Type',
