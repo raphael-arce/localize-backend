@@ -1,28 +1,5 @@
 name: Pull Request Pipeline
 on: [pull_request]
 jobs:
-  lint-and-test:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check out repository code  📥
-        uses: actions/checkout@v3
-      - name: Setup node 🔧
-        uses: actions/setup-node@v3
-        with:
-          node-version: 20.9.0
-          cache: npm
-      - name: Install dependencies 📦
-        run: |
-          npm ci
-      - name: Lint the repository 🔬
-        run: |
-          npm run lint
-      - name: Run tests 🔬
-        env:
-          DM_STORE_AVAILABILITY_API: ${{ vars.DM_STORE_AVAILABILITY_API }}
-          DM_PRODUCT_SEARCH_API: ${{ vars.DM_PRODUCT_SEARCH_API }}
-          ROSSMANN_PRODUCT_SEARCH_API: ${{ vars.ROSSMANN_PRODUCT_SEARCH_API }}
-          ROSSMANN_STORE_AVAILABILITY_API: ${{ vars.ROSSMANN_STORE_AVAILABILITY_API }}
-        run: |
-          npm run test:coverage
-      - run: echo "Done 🎉"
+  call-lint-and-test-workflow:
+    uses: ./.github/workflows/lint-and-test.yml
