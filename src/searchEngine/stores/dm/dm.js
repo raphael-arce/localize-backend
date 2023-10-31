@@ -97,6 +97,10 @@ export default {
     }
   },
 
+  getProductAvailabilityUrl({ dan, storeIds, env }) {
+    return `${env.DM_STORE_AVAILABILITY_API}/store-availability/DE/products/dans/${dan}/availability-with-listing?storeNumbers=${storeIds}&view=basic`;
+  },
+
   reduceAvailabilityResult({
     availabilityResult,
     storeAddressesMap,
@@ -140,9 +144,5 @@ export default {
       },
       []
     );
-  },
-
-  getProductAvailabilityUrl({ dan, storeIds, env }) {
-    return `${env.DM_STORE_AVAILABILITY_API}/store-availability/DE/products/dans/${dan}/availability-with-listing?storeNumbers=${storeIds}&view=basic`;
   },
 };

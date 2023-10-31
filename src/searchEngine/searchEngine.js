@@ -33,11 +33,7 @@ export default {
 
     results.forEach((products) => this.mergeProducts(products, productMap));
 
-    return Array.from(productMap, this.getValueOfMapEntry);
-  },
-
-  getValueOfMapEntry([, value]) {
-    return value;
+    return Array.from(productMap.values());
   },
 
   mergeProducts(products, productMap) {

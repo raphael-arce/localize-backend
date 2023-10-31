@@ -1,0 +1,250 @@
+{
+  "products": [
+    {
+      "gtin": "code1",
+      "title": "title1",
+      "imageUrl": "teaserimageurl1?width=310&height=140&fit=bounds",
+      "priceRange": {
+        "min": 1.95,
+        "formattedMin": "1,95 €",
+        "max": 1.95,
+        "formattedMax": "1,95 €"
+      },
+      "availableAt": {
+        "type": "FeatureCollection",
+        "features": [
+          {
+            "type": "Feature",
+            "properties": {
+              "storeId": "ROSSMANN_330",
+              "inStock": true,
+              "formattedPrice": "1,95 €",
+              "url": "https://www.rossmann.de/deurl1"
+            },
+            "geometry": {
+              "type": "Point",
+              "coordinates": [
+                13.4336757,
+                52.51002305
+              ]
+            }
+          },
+          {
+            "type": "Feature",
+            "properties": {
+              "storeId": "ROSSMANN_331",
+              "inStock": true,
+              "formattedPrice": "1,95 €",
+              "url": "https://www.rossmann.de/deurl1"
+            },
+            "geometry": {
+              "type": "Point",
+              "coordinates": [
+                13.413449,
+                52.520454
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "gtin": "code2",
+      "title": "title2",
+      "imageUrl": "teaserimageurl2?width=310&height=140&fit=bounds",
+      "priceRange": {
+        "min": 2.95,
+        "formattedMin": "1,95 €",
+        "max": 2.95,
+        "formattedMax": "1,95 €"
+      },
+      "availableAt": {
+        "type": "FeatureCollection",
+        "features": [
+          {
+            "type": "Feature",
+            "properties": {
+              "storeId": "ROSSMANN_330",
+              "inStock": true,
+              "formattedPrice": "1,95 €",
+              "url": "https://www.rossmann.de/deurl2"
+            },
+            "geometry": {
+              "type": "Point",
+              "coordinates": [
+                13.4336757,
+                52.51002305
+              ]
+            }
+          },
+          {
+            "type": "Feature",
+            "properties": {
+              "storeId": "ROSSMANN_331",
+              "inStock": true,
+              "formattedPrice": "1,95 €",
+              "url": "https://www.rossmann.de/deurl2"
+            },
+            "geometry": {
+              "type": "Point",
+              "coordinates": [
+                13.413449,
+                52.520454
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "gtin": "productGtin1",
+      "title": "title1",
+      "imageUrl": "https://example.com/image1.jpg",
+      "priceRange": {
+        "min": 1.99,
+        "formattedMin": "1,99 €",
+        "max": 1.99,
+        "formattedMax": "1,99 €"
+      },
+      "availableAt": {
+        "type": "FeatureCollection",
+        "features": [
+          {
+            "type": "Feature",
+            "properties": {
+              "storeId": "DM_1000",
+              "inStock": true,
+              "formattedPrice": "1,99 €",
+              "stockLevel": 1,
+              "url": "https://www.dm.de/product/1"
+            },
+            "geometry": {
+              "type": "Point",
+              "coordinates": [
+                13.324203,
+                52.502553
+              ]
+            }
+          },
+          {
+            "type": "Feature",
+            "properties": {
+              "storeId": "DM_1018",
+              "inStock": true,
+              "formattedPrice": "1,99 €",
+              "stockLevel": 2,
+              "url": "https://www.dm.de/product/1"
+            },
+            "geometry": {
+              "type": "Point",
+              "coordinates": [
+                13.353203,
+                52.550064
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "gtin": "productGtin2",
+      "title": "title2",
+      "imageUrl": "https://example.com/image2.jpg",
+      "priceRange": {
+        "min": 2.99,
+        "formattedMin": "2,99 €",
+        "max": 2.99,
+        "formattedMax": "2,99 €"
+      },
+      "availableAt": {
+        "type": "FeatureCollection",
+        "features": [
+          {
+            "type": "Feature",
+            "properties": {
+              "storeId": "DM_1000",
+              "inStock": true,
+              "formattedPrice": "2,99 €",
+              "stockLevel": 1,
+              "url": "https://www.dm.de/product/2"
+            },
+            "geometry": {
+              "type": "Point",
+              "coordinates": [
+                13.324203,
+                52.502553
+              ]
+            }
+          },
+          {
+            "type": "Feature",
+            "properties": {
+              "storeId": "DM_1018",
+              "inStock": true,
+              "formattedPrice": "2,99 €",
+              "stockLevel": 2,
+              "url": "https://www.dm.de/product/2"
+            },
+            "geometry": {
+              "type": "Point",
+              "coordinates": [
+                13.353203,
+                52.550064
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "storeAddresses": {
+    "ROSSMANN_330": {
+      "address": {
+        "name": "ROSSMANN Drogeriemarkt",
+        "street": "Am Ostbahnhof 9/1.03",
+        "zip": "10243",
+        "city": "Berlin"
+      },
+      "location": {
+        "lat": 52.51002305,
+        "lon": 13.4336757
+      }
+    },
+    "ROSSMANN_331": {
+      "address": {
+        "name": "ROSSMANN Drogeriemarkt",
+        "street": "Dircksenstr. 2",
+        "zip": "10179",
+        "city": "Berlin"
+      },
+      "location": {
+        "lat": 52.520454,
+        "lon": 13.413449
+      }
+    },
+    "DM_1000": {
+      "address": {
+        "name": "dm-drogerie markt",
+        "street": "Kurfürstendamm 34",
+        "zip": "10719",
+        "city": "Berlin"
+      },
+      "location": {
+        "lat": 52.502553,
+        "lon": 13.324203
+      }
+    },
+    "DM_1018": {
+      "address": {
+        "name": "dm-drogerie markt",
+        "street": "Müllerstraße 40b",
+        "zip": "13353",
+        "city": "Berlin"
+      },
+      "location": {
+        "lat": 52.550064,
+        "lon": 13.353203
+      }
+    }
+  }
+}
