@@ -6,6 +6,9 @@ on:
       - main
 
 jobs:
+  call-lint-and-test-workflow:
+    uses: ./.github/workflows/lint-and-test.yml
+
   deploy:
     runs-on: ubuntu-latest
     name: Deploy
