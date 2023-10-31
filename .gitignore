@@ -169,3 +169,6 @@ dist
 
 .dev.vars
 .wrangler/
+
+.idea/
+.DS_Store
