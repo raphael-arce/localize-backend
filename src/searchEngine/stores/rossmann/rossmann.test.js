@@ -31,7 +31,7 @@ describe('unit test: searchEngine/stores/rossmann/rossmann.js', () => {
     it('should return an empty array if the search result is falsy', async (t) => {
       const givenQuery = 'query';
       const givenStoreAddressesMap = new Map();
-      const givenResponse = null;
+      const givenResponse = { json() {} };
       t.mock.method(global, 'fetch', async () => givenResponse);
       t.mock.method(testUnit, 'mapProducts');
 
