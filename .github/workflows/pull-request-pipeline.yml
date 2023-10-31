@@ -1,7 +1,7 @@
 name: Pull Request Pipeline
 on: [pull_request]
 jobs:
-  build-lint:
+  lint-and-test:
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository code  📥
@@ -19,5 +19,5 @@ jobs:
           npm run lint
       - name: Run tests 🔬
         run: |
-          npm run test:unit:coverage
+          npm run test:coverage
       - run: echo "Done 🎉"

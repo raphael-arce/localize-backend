@@ -11,6 +11,6 @@ describe('integration tests mocks', () => {
 
     const expectedError = new Error(`Unhandled URL: ${givenUrl}`);
 
-    assert.rejects(async () => fetch('some url'), expectedError);
+    assert.rejects(async () => fetch(givenUrl), expectedError);
   });
 });

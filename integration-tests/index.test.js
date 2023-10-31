@@ -13,6 +13,8 @@ describe('integration test: main entry point', () => {
 
     t.mock.method(global, 'fetch', async (url) => mocks.mockedFetch(url));
 
+    console.log('PROCESS_ENV:', process.env);
+
     const actualResponse = await testUnit.fetch(givenRequest, process.env);
     const actualBody = await actualResponse.json();
 
