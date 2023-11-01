@@ -53,6 +53,7 @@ describe('unit test: main entry point', () => {
 
     it('should return a 500 error when something else goes wrong', async (t) => {
       const givenRequest = new Request('https://example.com/?q=hello');
+      const givenError = new Error('Some error');
 
       const expectedResponse = new Response('Internal Server Error.', {
         status: 500,
@@ -60,11 +61,15 @@ describe('unit test: main entry point', () => {
       });
 
       t.mock.method(searchEngine, 'search', async () =>
-        Promise.reject(new Error('Some error'))
+        Promise.reject(givenError)
       );
+      t.mock.method(console, 'error');
 
       const actualResponse = await testUnit.fetch(givenRequest, env);
 
+      assert.deepStrictEqual(console.error.mock.calls[0].arguments, [
+        givenError,
+      ]);
       assert.strictEqual(actualResponse.status, expectedResponse.status);
       assert.strictEqual(
         await actualResponse.text(),

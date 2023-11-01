@@ -102,10 +102,10 @@ describe('unit test: searchEngine/stores/dm/dm.js', () => {
     it('should return an empty array when there is an error', async (t) => {
       const givenQuery = 'query';
       const givenStoreAddressesMap = new Map();
+      const givenError = new Error('Some error');
 
-      t.mock.method(global, 'fetch', async () =>
-        Promise.reject(new Error('Some error'))
-      );
+      t.mock.method(global, 'fetch', async () => Promise.reject(givenError));
+      t.mock.method(console, 'error');
 
       const expectedResult = [];
 
@@ -115,6 +115,9 @@ describe('unit test: searchEngine/stores/dm/dm.js', () => {
         givenEnv
       );
 
+      assert.deepStrictEqual(console.error.mock.calls[0].arguments, [
+        givenError,
+      ]);
       assert.deepStrictEqual(actualResult, expectedResult);
     });
   });
@@ -267,10 +270,10 @@ describe('unit test: searchEngine/stores/dm/dm.js', () => {
 
     it('should return an empty array when there is an error', async (t) => {
       const givenArgs = {};
+      const givenError = new Error('Some error');
 
-      t.mock.method(global, 'fetch', async () =>
-        Promise.reject(new Error('Some error'))
-      );
+      t.mock.method(global, 'fetch', async () => Promise.reject(givenError));
+      t.mock.method(console, 'error');
 
       const expectedResult = [];
 
@@ -279,6 +282,9 @@ describe('unit test: searchEngine/stores/dm/dm.js', () => {
         givenEnv
       );
 
+      assert.deepStrictEqual(console.error.mock.calls[0].arguments, [
+        givenError,
+      ]);
       assert.deepStrictEqual(actualResult, expectedResult);
     });
   });
