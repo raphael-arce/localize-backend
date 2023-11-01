@@ -72,6 +72,7 @@ export default {
     env
   ) {
     const availabilityMap = new Map();
+
     const availabilityPromises = postcodes.map(async (postcode) => {
       try {
         const productAvailabilityUrl = this.getProductAvailabilityUrl({

@@ -101,10 +101,11 @@ describe('unit test: searchEngine/stores/rossmann/rossmann.js', () => {
     it('should return an empty array if something throws an error', async (t) => {
       const givenQuery = 'query';
       const givenStoreAddressesMap = new Map();
-      t.mock.method(global, 'fetch', async () => {
-        throw new Error('some error');
-      });
+      const givenError = new Error('some error');
+
+      t.mock.method(global, 'fetch', async () => Promise.reject(givenError));
       t.mock.method(testUnit, 'mapProducts');
+      t.mock.method(console, 'error');
 
       const actualResult = await testUnit.productSearch(
         givenQuery,
@@ -112,6 +113,9 @@ describe('unit test: searchEngine/stores/rossmann/rossmann.js', () => {
         givenEnv
       );
 
+      assert.deepStrictEqual(console.error.mock.calls[0].arguments, [
+        givenError,
+      ]);
       assert.deepStrictEqual(actualResult, []);
     });
   });
@@ -274,11 +278,11 @@ describe('unit test: searchEngine/stores/rossmann/rossmann.js', () => {
       const givenEnv = {
         ROSSMANN_STORE_AVAILABILITY_API: 'someUrl',
       };
+      const givenError = new Error('some error');
 
-      t.mock.method(global, 'fetch', async () =>
-        Promise.reject(new Error('some error'))
-      );
+      t.mock.method(global, 'fetch', async () => Promise.reject(givenError));
       t.mock.method(testUnit, 'mergeAvailabilityResult');
+      t.mock.method(console, 'error');
 
       const actualResult = await testUnit.getProductAvailability(
         {
@@ -291,6 +295,9 @@ describe('unit test: searchEngine/stores/rossmann/rossmann.js', () => {
         givenEnv
       );
 
+      assert.deepStrictEqual(console.error.mock.calls[0].arguments, [
+        givenError,
+      ]);
       assert.deepStrictEqual(actualResult, []);
     });
   });
